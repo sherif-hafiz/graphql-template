@@ -63,10 +63,12 @@ app.use('/graphql', graphqlHttp({
 
 mongoose.set('useNewUrlParser', true);
 mongoose.createConnection('mongodb://localhost:27017/calendar')
-.then(() =>{
+  .then(() => {
+    // eslint-disable-next-line no-console
     console.log('DB has started up');
-})
-.catch(err => {
+  })
+  .catch((err) => {
+    // eslint-disable-next-line no-console
     console.log(err);
-});
+  });
 app.listen(3001);
