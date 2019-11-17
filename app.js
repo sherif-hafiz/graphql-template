@@ -4,11 +4,11 @@ const graphqlHttp = require('express-graphql');
 const { buildSchema } = require('graphql');
 const mongoose = require('mongoose');
 
+const Event = require('./models/event');
+
 const app = express();
 
 app.use(bodyParser.json());
-
-const events = [];
 
 app.use('/graphql', graphqlHttp({
   schema: buildSchema(`
@@ -42,29 +42,48 @@ app.use('/graphql', graphqlHttp({
     }
   `),
   rootValue: {
-    events: () => events,
+    events: () => {
+        return Event
+                .find()
+                .then(events => {
+                    return events.map(event => {
+                        return { ...event._doc }
+                    })
+                })
+                .catch(err => {
+                    throw err;
+                })
+    },
     createEvent: (args) => {
-      console.log(args);
-      const event = {
-        _id: Math.random().toString(),
+
+      const event = new Event({
         title: args.eventInput.title,
         description: args.eventInput.description,
         price: +args.eventInput.price,
         date: new Date().toISOString(),
-      };
-      console.log(event);
-      events.push(event);
+      });
 
-      return event;
+
+      return event
+        .save()
+        .then((result) => {
+            console.log(result);
+            return { ...result._doc }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
     },
   },
   graphiql: true,
 }));
 
 mongoose.set('useNewUrlParser', true);
-mongoose.createConnection(`mongodb://localhost:27017/${process.env.MONGO_DB}`)
+mongoose.connect(`mongodb://localhost:27017/${process.env.MONGO_DB}`)
   .then(() => {
     // eslint-disable-next-line no-console
+    console.log(process.env.MONGO_DB);
     console.log('DB has started up');
   })
   .catch((err) => {
