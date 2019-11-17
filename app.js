@@ -3,12 +3,16 @@ const bodyParser = require('body-parser');
 const graphqlHttp = require('express-graphql');
 const { buildSchema } = require('graphql');
 const mongoose = require('mongoose');
+const responseTime = require('response-time');
+
+
 
 const Event = require('./models/event');
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use(responseTime());
 
 app.use('/graphql', graphqlHttp({
   schema: buildSchema(`
