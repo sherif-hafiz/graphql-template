@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const responseTime = require('response-time');
 
 
-
+// Models
 const Event = require('./models/event');
 
 const app = express();
