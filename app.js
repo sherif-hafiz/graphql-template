@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const graphqlHttp = require('express-graphql');
 const { buildSchema } = require('graphql');
+const mongoose = require('mongoose');
 
 const app = express();
 
@@ -60,4 +61,12 @@ app.use('/graphql', graphqlHttp({
   graphiql: true,
 }));
 
+mongoose.set('useNewUrlParser', true);
+mongoose.createConnection('mongodb://localhost:27017/calendar')
+.then(() =>{
+    console.log('DB has started up');
+})
+.catch(err => {
+    console.log(err);
+});
 app.listen(3001);
