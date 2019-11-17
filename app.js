@@ -62,7 +62,7 @@ app.use('/graphql', graphqlHttp({
 }));
 
 mongoose.set('useNewUrlParser', true);
-mongoose.createConnection('mongodb://localhost:27017/calendar')
+mongoose.createConnection(`mongodb://localhost:27017/${process.env.MONGO_DB}`)
   .then(() => {
     // eslint-disable-next-line no-console
     console.log('DB has started up');

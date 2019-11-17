@@ -1,1 +1,5 @@
-{}
+{
+    "env": {
+        "MONGO_DB": "events-dev"
+    }
+}
